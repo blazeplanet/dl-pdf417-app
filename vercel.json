@@ -1,0 +1,21 @@
+{
+  "version": 2,
+  "functions": {
+    "api/generate.py": { 
+      "runtime": "python3.9"
+    }
+  },
+  "routes": [
+    { 
+      "src": "/api/(.*)", 
+      "dest": "/api/generate.py" 
+    },
+    { 
+      "handle": "filesystem" 
+    },
+    { 
+      "src": "/(.*)", 
+      "dest": "/public/$1" 
+    }
+  ]
+}

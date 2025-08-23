@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF417 Driver's License Generator</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🆔 PDF417 Driver's License Generator</h1>
+            <p>Generate PDF417 barcodes with driver's license form data</p>
+        </header>
+
+        <main>
+            <div class="form-container">
+                <h2>Driver's License Information</h2>
+                <form id="dlForm" class="dl-form">
+                    
+                    <!-- Row 1: DL Number and Names -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="dl_number">DL Number 📋</label>
+                            <input type="text" id="dl_number" name="dl_number" required 
+                                   placeholder="091076664" maxlength="10">
+                        </div>
+                        <div class="form-group">
+                            <label for="first_name">First name</label>
+                            <input type="text" id="first_name" name="first_name" required 
+                                   placeholder="STANELY" maxlength="40">
+                        </div>
+                        <div class="form-group">
+                            <label for="last_name">Last name</label>
+                            <input type="text" id="last_name" name="last_name" required 
+                                   placeholder="Crooms" maxlength="40">
+                        </div>
+                        <div class="form-group">
+                            <label for="middle_name">Middle name ⓘ</label>
+                            <input type="text" id="middle_name" name="middle_name" 
+                                   placeholder="David" maxlength="40">
+                        </div>
+                    </div>
+
+                    <!-- Row 2: Address Information -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="address">Address</label>
+                            <input type="text" id="address" name="address" required 
+                                   placeholder="2110 Old Maple Ln" maxlength="35">
+                        </div>
+                        <div class="form-group">
+                            <label for="city">City</label>
+                            <input type="text" id="city" name="city" required 
+                                   placeholder="Durham" maxlength="20">
+                        </div>
+                        <div class="form-group">
+                            <label for="zip_code">Zip code</label>
+                            <input type="text" id="zip_code" name="zip_code" required 
+                                   placeholder="37745" pattern="[0-9]{5}" maxlength="5">
+                        </div>
+                        <div class="form-group">
+                            <label for="dl_class">DL Class</label>
+                            <select id="dl_class" name="dl_class" required>
+                                <option value="D" selected>D</option>
+                                <option value="A">A</option>
+                                <option value="B">B</option>
+                                <option value="C">C</option>
+                                <option value="M">M</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Row 3: Physical Information -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="sex">Sex</label>
+                            <select id="sex" name="sex" required>
+                                <option value="M" selected>M</option>
+                                <option value="F">F</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="donor">Donor</label>
+                            <select id="donor" name="donor">
+                                <option value="No" selected>No</option>
+                                <option value="Yes">Yes</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="height_inches">Height (in.)</label>
+                            <input type="number" id="height_inches" name="height_inches" required 
+                                   placeholder="69" min="36" max="96" maxlength="2">
+                            <small>≈ <span id="height_cm">175 cm</span></small>
+                        </div>
+                    </div>
+
+                    <!-- Row 4: Dates -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="birth_date">Birth date 📅</label>
+                            <input type="text" id="birth_date" name="birth_date" required 
+                                   placeholder="04151988" pattern="[0-9]{8}" maxlength="8">
+                            <small>Requires a date in the MMDDYYYY format.</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="issue_date">Issue date 📅</label>
+                            <input type="text" id="issue_date" name="issue_date" required 
+                                   placeholder="07282025" pattern="[0-9]{8}" maxlength="8">
+                            <small>Requires a date in the MMDDYYYY format.</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="expiry_date">Expiry date 📅</label>
+                            <input type="text" id="expiry_date" name="expiry_date" required 
+                                   placeholder="07282033" pattern="[0-9]{8}" maxlength="8">
+                            <small>Requires a date in the MMDDYYYY format.</small>
+                        </div>
+                    </div>
+
+                    <!-- Row 5: ID Numbers -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="icn">ICN 📋</label>
+                            <input type="text" id="icn" name="icn" 
+                                   placeholder="252090372892550101" maxlength="20">
+                        </div>
+                        <div class="form-group">
+                            <label for="dd">DD 📋</label>
+                            <input type="text" id="dd" name="dd" 
+                                   placeholder="110250728203364" maxlength="15">
+                        </div>
+                        <div class="form-group">
+                            <label for="eye_color">Eye (ANSI D-20)</label>
+                            <select id="eye_color" name="eye_color">
+                                <option value="HAZ" selected>HAZ (Hazel)</option>
+                                <option value="BLU">BLU (Blue)</option>
+                                <option value="BRO">BRO (Brown)</option>
+                                <option value="GRN">GRN (Green)</option>
+                                <option value="GRY">GRY (Gray)</option>
+                                <option value="BLK">BLK (Black)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Row 6: Additional Information -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="restrictions">Restrictions</label>
+                            <input type="text" id="restrictions" name="restrictions" 
+                                   value="NONE" placeholder="NONE" maxlength="10">
+                        </div>
+                        <div class="form-group">
+                            <label for="endorsement">Endorsement</label>
+                            <input type="text" id="endorsement" name="endorsement" 
+                                   value="NONE" placeholder="NONE" maxlength="10">
+                        </div>
+                        <div class="form-group">
+                            <label for="address_2nd_line">Address (2nd line)</label>
+                            <input type="text" id="address_2nd_line" name="address_2nd_line" 
+                                   placeholder="" maxlength="35">
+                        </div>
+                        <div class="form-group">
+                            <label for="is_real_id">Is REAL ID ⓘ</label>
+                            <select id="is_real_id" name="is_real_id">
+                                <option value="Yes" selected>Yes</option>
+                                <option value="No">No</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" id="generateBtn" class="btn-primary">
+                            🔄 Generate PDF417 Barcode
+                        </button>
+                        <button type="reset" class="btn-secondary">
+                            🗑️ Clear Form
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Results Section -->
+            <div class="results-container" id="results" style="display: none;">
+                <h2>Generated Barcode</h2>
+                <div class="barcode-container">
+                    <img id="barcodeImage" alt="Generated PDF417 Barcode" />
+                </div>
+                <div class="download-actions">
+                    <a id="downloadLink" class="btn-primary" download="driver_license_pdf417.png">
+                        📥 Download PNG
+                    </a>
+                    <button id="copyBtn" class="btn-secondary">
+                        📋 Copy Image
+                    </button>
+                </div>
+                <details class="ansi-data">
+                    <summary>View ANSI Data</summary>
+                    <pre id="ansiOutput"></pre>
+                </details>
+            </div>
+
+            <!-- Loading Indicator -->
+            <div id="loading" class="loading" style="display: none;">
+                <div class="spinner"></div>
+                <p>Generating PDF417 barcode...</p>
+            </div>
+        </main>
+
+        <footer>
+            <p>Built with 💻 FastAPI, PDF417Gen, and deployed on Vercel</p>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
