@@ -1,21 +1,23 @@
 {
   "version": 2,
-  "functions": {
-    "api/generate.py": { 
-      "runtime": "python3.9"
+  "builds": [
+    {
+      "src": "public/**/*",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "api/generate.py",
+      "use": "@vercel/python"
     }
-  },
+  ],
   "routes": [
-    { 
-      "src": "/api/(.*)", 
-      "dest": "/api/generate.py" 
+    {
+      "src": "/api/(.*)",
+      "dest": "/api/generate.py"
     },
-    { 
-      "handle": "filesystem" 
-    },
-    { 
-      "src": "/(.*)", 
-      "dest": "/public/$1" 
+    {
+      "src": "/(.*)",
+      "dest": "/public/$1"
     }
   ]
 }
