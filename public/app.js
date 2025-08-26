@@ -278,41 +278,81 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+
+    // Utility functions for random demo data
+    function randomDLNumber() {
+        // 9-digit random number
+        return String(Math.floor(100000000 + Math.random() * 900000000));
+    }
+    function randomZip() {
+        // 5-digit random zip code
+        return String(Math.floor(10000 + Math.random() * 90000));
+    }
+    function randomDate(startYear, endYear) {
+        // Generate a random date in MMDDYYYY format
+        const year = Math.floor(Math.random() * (endYear - startYear + 1)) + startYear;
+        const month = String(Math.floor(Math.random() * 12) + 1).padStart(2, '0');
+        const day = String(Math.floor(Math.random() * 28) + 1).padStart(2, '0');
+        return `${month}${day}${year}`;
+    }
+
     // Auto-fill with demo data for testing
     function fillDemoData() {
         const demoData = {
-            dl_number: '091076664',
+            dl_number: randomDLNumber(),
             first_name: 'STANLEY',
             last_name: 'Crooms',
             middle_name: 'David',
             address: '2110 Old Maple Ln',
             city: 'Durham',
-            zip_code: '37745',
+            zip_code: randomZip(),
             sex: 'M',
-            height_inches: '69',
-            birth_date: '04151988',
-            issue_date: '07282025',
-            expiry_date: '07282033'
+            height_inches: String(Math.floor(Math.random() * (96 - 36 + 1)) + 36),
+            birth_date: randomDate(1970, 2005),
+            issue_date: randomDate(2020, 2025),
+            expiry_date: randomDate(2026, 2035)
         };
-        
         Object.entries(demoData).forEach(([key, value]) => {
             const element = document.getElementById(key);
             if (element) element.value = value;
         });
-        
         updateHeightCm();
     }
 
     // Add demo data button for development/testing
     if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        const actions = document.querySelector('.form-actions');
+        // Demo data button
         const demoBtn = document.createElement('button');
         demoBtn.type = 'button';
         demoBtn.className = 'btn-secondary';
         demoBtn.textContent = '🧪 Fill Demo Data';
         demoBtn.onclick = fillDemoData;
-        
-        const actions = document.querySelector('.form-actions');
         actions.appendChild(demoBtn);
+
+        // Add auto-generate buttons for key fields
+        const autoFields = [
+            { id: 'dl_number', gen: randomDLNumber, label: 'Auto' },
+            { id: 'zip_code', gen: randomZip, label: 'Auto' },
+            { id: 'birth_date', gen: () => randomDate(1970, 2005), label: 'Auto' },
+            { id: 'issue_date', gen: () => randomDate(2020, 2025), label: 'Auto' },
+            { id: 'expiry_date', gen: () => randomDate(2026, 2035), label: 'Auto' }
+        ];
+        autoFields.forEach(({ id, gen, label }) => {
+            const input = document.getElementById(id);
+            if (input) {
+                const autoBtn = document.createElement('button');
+                autoBtn.type = 'button';
+                autoBtn.className = 'btn-auto';
+                autoBtn.textContent = label;
+                autoBtn.style.marginLeft = '8px';
+                autoBtn.onclick = () => {
+                    input.value = gen();
+                    if (id === 'height_inches') updateHeightCm();
+                };
+                input.parentNode.insertBefore(autoBtn, input.nextSibling);
+            }
+        });
     }
 
     // Initialize

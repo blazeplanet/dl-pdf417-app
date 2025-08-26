@@ -115,10 +115,5 @@ async def generate_pdf417(data: DriverLicenseData):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error generating PDF417 barcode: {str(e)}")
 
-# For Vercel serverless function compatibility
-def handler(request):
-    return app(request)
 
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+# Vercel will automatically detect and use the FastAPI 'app' object as the entry point.

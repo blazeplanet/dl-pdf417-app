@@ -2,7 +2,7 @@
 
 A modern web application that generates PDF417 barcodes from driver's license form data. Built with FastAPI, vanilla JavaScript, and deployed on Vercel.
 
-![PDF417 Generator Demo](https://via.placeholder.com/800x400/667eea/white?text=PDF417+Generator+Demo)
+![PDF417 Generator Demo](https://raw.githubusercontent.com/blazeplanet/dl-pdf417-app/main/public/pdf417-demo.png)
 
 ## ✨ Features
 
