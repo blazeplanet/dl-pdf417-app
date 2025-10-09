@@ -1,9 +1,2 @@
 [project]
 requires-python = ">=3.12"
-name = "dl-pdf417-app"
-version = "1.0.0"
-description = "PDF417 barcode processing application"
-
-[build-system]
-requires = ["setuptools>=45", "wheel"]
-build-backend = "setuptools.build_meta"
