@@ -370,8 +370,7 @@ async def generate_pdf417(data: DriverLicenseData):
             image.save(
                 buffer,
                 format="PNG",
-                optimize=True,
-                compress_level=6  # Good compression without quality loss
+                optimize=True
             )
             img_base64 = base64.b64encode(buffer.getvalue()).decode()
         except Exception as e:
@@ -385,7 +384,7 @@ async def generate_pdf417(data: DriverLicenseData):
             "validation": {
                 "state_iin": STATE_IIN_CODES.get(data.state, '636000'),
                 "data_length": len(ansi_data),
-                "barcode_size": image.size,
+                "barcode_size": list(image.size),
                 "compliant": True
             },
             "metadata": {
@@ -404,13 +403,3 @@ async def generate_pdf417(data: DriverLicenseData):
         raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Unexpected error generating PDF417 barcode: {str(e)}")
-
-# Error handler for better debugging
-@app.exception_handler(Exception)
-async def global_exception_handler(request, exc):
-    return {
-        "success": False,
-        "error": str(exc),
-        "type": type(exc).__name__,
-        "timestamp": datetime.now().isoformat()
-    }
