@@ -1,261 +1,361 @@
-# 🆔 PDF417 Driver's License Generator
+# PDF417 Driver License Generator 🆔
 
-A modern web application that generates PDF417 barcodes from driver's license form data. Built with FastAPI, vanilla JavaScript, and deployed on Vercel.
-
-![PDF417 Generator Demo](https://raw.githubusercontent.com/blazeplanet/dl-pdf417-app/main/public/pdf417-demo.png)
+A robust, ANSI-compliant PDF417 barcode generator specifically designed for US state driver licenses. This application generates high-quality PDF417 barcodes that match the format and standards used by state DMVs.
 
 ## ✨ Features
 
-- 📋 **Interactive Form**: Clean, responsive driver's license form interface
-- 🔄 **PDF417 Generation**: Convert form data to ANSI format and generate PDF417 barcodes
-- 📱 **Responsive Design**: Works seamlessly on desktop and mobile devices
-- 📥 **Download Support**: Download generated barcodes as PNG images
-- 📋 **Copy to Clipboard**: One-click copy functionality for generated barcodes
-- ✅ **Form Validation**: Client-side validation with helpful error messages
-- 🧪 **Demo Data**: Quick-fill with sample data for testing (localhost only)
-- 🎨 **Modern UI**: Beautiful gradient design with smooth animations
+- **ANSI D20 Compliant**: Generates barcodes following official ANSI standards
+- **50+ States Supported**: All US states with correct IIN codes
+- **Comprehensive Validation**: Input validation for all driver license fields
+- **High-Quality Output**: Optimized for scanning with proper error correction
+- **Real-time Generation**: Fast API with instant barcode creation
+- **State-Specific**: Correct formatting for each state's requirements
+- **Error Handling**: Robust validation and clear error messages
 
-## 🏗️ Tech Stack
+## 🚀 Live Demo
 
-- **Frontend**: HTML5, CSS3, Vanilla JavaScript
-- **Backend**: Python FastAPI (serverless functions)
-- **PDF417 Generation**: `pdf417gen` library
-- **Image Processing**: Pillow (PIL)
-- **Deployment**: Vercel
-- **Version Control**: Git + GitHub
+**API Endpoint**: `https://dl-pdf417-app.vercel.app`
 
-## 🚀 Quick Start
-
-### Prerequisites
-
-- Python 3.9+ 
-- Node.js 18+ (for Vercel CLI)
-- Git
-
-### Local Development
-
-1. **Clone the repository:**
-   ```bash
-   git clone <your-repo-url>
-   cd dl-pdf417-app
-   ```
-
-2. **Install Python dependencies:**
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-3. **Install Vercel CLI:**
-   ```bash
-   npm install -g vercel
-   ```
-
-4. **Run local development server:**
-   ```bash
-   vercel dev
-   ```
-
-5. **Open your browser:**
-   Navigate to `http://localhost:3000`
-
-### Testing the Application
-
-1. Fill out the driver's license form with valid data
-2. Click "Generate PDF417 Barcode"
-3. View the generated barcode and download if needed
-4. Use the "Fill Demo Data" button (localhost only) for quick testing
-
-## 📁 Project Structure
-
-```
-dl-pdf417-app/
-├── api/
-│   ├── generate.py          # FastAPI serverless function
-│   └── generate_pdf417.py   # Original PDF417 generation script
-├── public/
-│   ├── index.html          # Main application page
-│   ├── styles.css          # Responsive CSS styles
-│   └── app.js              # Frontend JavaScript logic
-├── vercel.json             # Vercel deployment configuration
-├── requirements.txt        # Python dependencies
-├── .gitignore             # Git ignore rules
-└── README.md              # This file
+### Quick Test
+```bash
+curl -X POST https://dl-pdf417-app.vercel.app/generate \
+  -H "Content-Type: application/json" \
+  -d '{
+    "dl_number": "091076664",
+    "first_name": "JOHN",
+    "last_name": "DOE",
+    "address": "123 MAIN ST",
+    "city": "NASHVILLE",
+    "state": "TN",
+    "zip_code": "37203",
+    "sex": "M",
+    "height_inches": "72",
+    "birth_date": "01151990",
+    "issue_date": "10012023",
+    "expiry_date": "10012028",
+    "eye_color": "BRO"
+  }'
 ```
 
-## 🔧 API Endpoints
+## 📚 API Documentation
 
-### `POST /api/generate`
+### Endpoints
 
-Generate a PDF417 barcode from driver's license data.
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/` | GET | API health and info |
+| `/generate` | POST | Generate PDF417 barcode |
+| `/states` | GET | List supported states |
+| `/validation` | GET | Get validation rules |
 
-**Request Body:**
+### Generate Barcode
+
+**POST** `/generate`
+
+#### Required Fields
 ```json
 {
-  "dl_number": "091076664",
-  "first_name": "STANLEY",
-  "last_name": "Crooms",
-  "middle_name": "David",
-  "address": "2110 Old Maple Ln",
-  "city": "Durham",
-  "zip_code": "37745",
-  "sex": "M",
-  "height_inches": "69",
-  "birth_date": "04151988",
-  "issue_date": "07282025",
-  "expiry_date": "07282033",
-  "eye_color": "HAZ",
-  "dl_class": "D",
-  "donor": "No",
-  "restrictions": "NONE",
-  "endorsement": "NONE"
+  "dl_number": "string (1-20 chars)",
+  "first_name": "string",
+  "last_name": "string",
+  "address": "string",
+  "city": "string",
+  "state": "string (2-letter code)",
+  "zip_code": "string (5 digits)",
+  "sex": "M|F|X",
+  "height_inches": "string (36-96)",
+  "birth_date": "string (MMDDYYYY)",
+  "issue_date": "string (MMDDYYYY)",
+  "expiry_date": "string (MMDDYYYY)",
+  "eye_color": "string (BLK|BLU|BRO|GRY|GRN|HAZ|MAR|PNK)"
 }
 ```
 
-**Response:**
+#### Optional Fields
+```json
+{
+  "middle_name": "string",
+  "weight_lbs": "string (50-999)",
+  "hair_color": "string (BAL|BLK|BLN|BRO|GRY|RED|SDY|WHI)",
+  "dl_class": "string (default: D)",
+  "restrictions": "string",
+  "endorsements": "string",
+  "address_2nd_line": "string",
+  "donor": "Y|N (default: N)",
+  "veteran": "Y|N (default: N)",
+  "is_real_id": "Y|N (default: Y)",
+  "icn": "string (auto-generated if empty)",
+  "dd": "string (auto-generated if empty)"
+}
+```
+
+#### Response Format
 ```json
 {
   "success": true,
-  "barcode": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA...",
-  "ansi_data": "@\n\nANSI 636053060002DL00410257ZT02980037DL\nDAQ091076664\n...",
-  "image_size": [400, 200]
+  "barcode": "data:image/png;base64,iVBORw0KGgo...",
+  "ansi_data": "@\n\nANSI 636053060...",
+  "validation": {
+    "state_iin": "636053",
+    "data_length": 245,
+    "barcode_size": [520, 200],
+    "compliant": true
+  },
+  "metadata": {
+    "columns": 14,
+    "security_level": 5,
+    "scale": 4,
+    "ratio": 3,
+    "format": "ANSI D20",
+    "generated_at": "2025-10-09T17:30:00Z",
+    "state": "TN",
+    "dl_class": "D"
+  }
 }
 ```
 
-## 🌍 Deployment
+## 📝 Field Reference
 
-This application is configured for automatic deployment on Vercel:
+### Eye Color Codes
+- `BLK` - Black
+- `BLU` - Blue  
+- `BRO` - Brown
+- `GRY` - Gray
+- `GRN` - Green
+- `HAZ` - Hazel
+- `MAR` - Maroon
+- `PNK` - Pink
+- `DIC` - Dichromatic
 
-### Deploy to Vercel
+### Hair Color Codes
+- `BAL` - Bald
+- `BLK` - Black
+- `BLN` - Blond
+- `BRO` - Brown
+- `GRY` - Gray
+- `RED` - Red
+- `SDY` - Sandy
+- `WHI` - White
+- `XXX` - Unknown
 
-1. **Connect GitHub Repository:**
-   - Visit [vercel.com](https://vercel.com)
-   - Import your GitHub repository
-   - Vercel will automatically detect the project settings
+### Height Format
+- **Inches only**: `"72"` (72 inches)
+- **Feet and inches**: `"6'0"` or `"6'0\"` (6 feet 0 inches)
+- **Range**: 36-96 inches (3-8 feet)
 
-2. **Configure Environment:**
-   - No environment variables required for basic functionality
-   - Python runtime is automatically detected
+### Date Format
+- **Format**: `MMDDYYYY`
+- **Examples**: 
+  - `"01151990"` (January 15, 1990)
+  - `"12252025"` (December 25, 2025)
 
-3. **Deploy:**
-   - Push to `main` branch for automatic deployment
-   - Or use `vercel --prod` for manual deployment
+## 📊 State Support
 
-### Manual Deployment Steps
+All 50 US states plus DC supported with correct IIN codes:
+
+| State | IIN Code | State | IIN Code | State | IIN Code |
+|-------|----------|-------|----------|-------|-----------|
+| AL | 636015 | AK | 636059 | AZ | 636026 |
+| AR | 636021 | CA | 636014 | CO | 636020 |
+| CT | 636006 | DE | 636011 | FL | 636010 |
+| GA | 636055 | HI | 636047 | ID | 636050 |
+| IL | 636035 | IN | 636037 | IA | 636018 |
+| KS | 636022 | KY | 636046 | LA | 636007 |
+| ME | 636041 | MD | 636003 | MA | 636002 |
+| MI | 636032 | MN | 636038 | MS | 636051 |
+| MO | 636030 | MT | 636008 | NE | 636054 |
+| NV | 636049 | NH | 636039 | NJ | 636036 |
+| NM | 636009 | NY | 636001 | NC | 636004 |
+| ND | 636034 | OH | 636023 | OK | 636058 |
+| OR | 636029 | PA | 636025 | RI | 636052 |
+| SC | 636005 | SD | 636042 | TN | 636053 |
+| TX | 636015 | UT | 636040 | VT | 636024 |
+| VA | 636000 | WA | 636045 | WV | 636061 |
+| WI | 636031 | WY | 636060 | DC | 636043 |
+
+## 🚀 Development
+
+### Prerequisites
+- Python 3.12+
+- pip or pipenv
+
+### Local Setup
+```bash
+# Clone the repository
+git clone https://github.com/blazeplanet/dl-pdf417-app.git
+cd dl-pdf417-app
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Run the development server
+uvicorn api.generate:app --host 0.0.0.0 --port 8000 --reload
+```
+
+### Testing
+```bash
+# Run the comprehensive test suite
+python test_api.py
+
+# Test specific functionality
+curl http://localhost:8000/
+curl http://localhost:8000/states
+curl http://localhost:8000/validation
+```
+
+### Deployment
+
+The app is configured for Vercel deployment:
 
 ```bash
-# Login to Vercel
-vercel login
+# Deploy to Vercel
+vercel deploy
 
-# Deploy to production
+# Production deployment
 vercel --prod
-
-# Follow the prompts to configure your project
 ```
 
-## 🛠️ Configuration
+## 🔍 Technical Details
 
-### Vercel Configuration (`vercel.json`)
+### ANSI Compliance
+- **Standard**: ANSI/AAMVA DL/ID Card Design Standard
+- **Version**: D20
+- **Subfile**: DL (Driver License)
+- **Security**: Level 5 error correction
+- **Encoding**: UTF-8
 
+### PDF417 Specifications
+- **Columns**: 14 (optimized for DL data)
+- **Error Correction**: Level 5 (high reliability)
+- **Scale**: 4x (high resolution)
+- **Aspect Ratio**: 3:1 (standard DL format)
+- **Quiet Zone**: 15 pixels
+- **Colors**: Black bars on white background
+
+### Data Fields (ANSI Tags)
+- `DAQ` - Driver License Number
+- `DCS` - Last Name
+- `DAC` - First Name
+- `DDF` - Middle Name
+- `DAD` - Sex
+- `DBB` - Birth Date
+- `DBA` - Expiry Date
+- `DBD` - Issue Date
+- `DBC` - License Class
+- `DAU` - Height
+- `DAY` - Eye Color
+- `DAZ` - Hair Color
+- `DAW` - Weight
+- `DAG` - Address
+- `DAI` - City
+- `DAJ` - State
+- `DAK` - Zip Code
+- `DCF` - Document Discriminator/ICN
+- `DCK` - Audit Information
+- `DDB` - Restrictions
+- `DDA` - Endorsements
+
+## ⚠️ Important Notes
+
+1. **Legal Use Only**: This tool is for educational, testing, and legitimate development purposes only
+2. **Not for Fraud**: Creating fake identification documents is illegal
+3. **Compliance**: Ensure compliance with local and federal laws
+4. **Data Security**: Do not transmit sensitive personal information
+5. **Testing**: Use fictitious data for testing purposes
+
+## 🐛 Error Handling
+
+The API provides detailed error messages for:
+- **400**: Validation errors (invalid data format)
+- **422**: Unprocessable entity (missing required fields)
+- **500**: Server errors (PDF417 generation issues)
+
+Example error response:
 ```json
 {
-  "version": 2,
-  "functions": {
-    "api/generate.py": { 
-      "runtime": "python3.9"
-    }
-  },
-  "routes": [
-    { "src": "/api/(.*)", "dest": "/api/generate.py" },
-    { "handle": "filesystem" },
-    { "src": "/(.*)", "dest": "/public/$1" }
-  ]
+  "success": false,
+  "error": "Invalid eye color: PURPLE. Valid codes: BLK, BLU, BRO, GRY, GRN, HAZ, MAR, PNK",
+  "type": "ValueError",
+  "timestamp": "2025-10-09T17:30:00Z"
 }
 ```
 
-### Python Dependencies (`requirements.txt`)
+## 📜 Example Usage
 
+### JavaScript (Frontend)
+```javascript
+const generateBarcode = async (licenseData) => {
+  try {
+    const response = await fetch('/api/generate', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(licenseData)
+    });
+    
+    const result = await response.json();
+    
+    if (result.success) {
+      // Display the barcode image
+      document.getElementById('barcode').src = result.barcode;
+      console.log('Generated ANSI data:', result.ansi_data);
+    } else {
+      console.error('Generation failed:', result.error);
+    }
+  } catch (error) {
+    console.error('Request failed:', error);
+  }
+};
 ```
-fastapi==0.104.1
-pdf417gen==0.8.1
-pillow==10.0.1
-uvicorn==0.24.0
+
+### Python (Backend)
+```python
+import requests
+import json
+
+def generate_pdf417(license_data):
+    url = "https://dl-pdf417-app.vercel.app/generate"
+    response = requests.post(url, json=license_data)
+    
+    if response.status_code == 200:
+        result = response.json()
+        return result['barcode']  # Base64 encoded image
+    else:
+        raise Exception(f"API Error: {response.text}")
+
+# Example usage
+license_data = {
+    "dl_number": "D123456789",
+    "first_name": "JANE",
+    "last_name": "SMITH",
+    # ... other required fields
+}
+
+barcode_image = generate_pdf417(license_data)
 ```
 
-## 🎯 Form Validation
+## 🔗 Resources
 
-The application includes comprehensive form validation:
+- [AAMVA DL/ID Card Design Standard](https://www.aamva.org/)
+- [PDF417 Specification](https://en.wikipedia.org/wiki/PDF417)
+- [ANSI D20 Standard](https://webstore.ansi.org/)
+- [Vercel Documentation](https://vercel.com/docs)
 
-- **Required Fields**: All essential driver's license fields must be filled
-- **Date Format**: Dates must be in MMDDYYYY format (e.g., 04151988)
-- **Zip Code**: Must be exactly 5 digits
-- **Height**: Must be between 36-96 inches
-- **Real-time Feedback**: Immediate validation with helpful error messages
-
-## 📱 Responsive Design
-
-The application is fully responsive and works on:
-
-- **Desktop**: Full-featured experience with grid layout
-- **Tablet**: Adaptive layout with touch-friendly controls
-- **Mobile**: Single-column layout optimized for small screens
-
-## 🔒 Security Considerations
-
-- Client-side validation only (server-side validation recommended for production)
-- No sensitive data storage (form data is processed in memory only)
-- CORS headers configured for cross-origin requests
-- Input sanitization through Pydantic models
-
-## 🐛 Troubleshooting
-
-### Common Issues
-
-1. **API not working locally:**
-   - Ensure Python dependencies are installed: `pip install -r requirements.txt`
-   - Check that `vercel dev` is running on port 3000
-
-2. **Barcode not generating:**
-   - Verify all required fields are filled
-   - Check browser console for JavaScript errors
-   - Ensure date formats are correct (MMDDYYYY)
-
-3. **Styling issues:**
-   - Clear browser cache and refresh
-   - Check that `styles.css` is loading properly
-
-### Development Tips
-
-- Use the "Fill Demo Data" button for quick testing on localhost
-- Open browser developer tools to view API requests/responses
-- Check the Network tab for any failed requests
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## 📄 License
+## 📝 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🙏 Acknowledgments
+## 🤝 Contributing
 
-- **PDF417Gen**: Python library for PDF417 barcode generation
-- **FastAPI**: Modern Python web framework
-- **Vercel**: Deployment platform
-- **ANSI D20**: Driver's license data standard
+Contributions are welcome! Please feel free to submit a Pull Request.
 
-## 📞 Support
-
-If you encounter any issues or have questions:
-
-1. Check the [Issues](../../issues) page
-2. Create a new issue with detailed information
-3. Include browser console output and steps to reproduce
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
 ---
 
-**Built with 💻 by [Your Name] using FastAPI, PDF417Gen, and deployed on Vercel**
+🚀 **Ready to generate ANSI-compliant PDF417 barcodes!** 🚀
